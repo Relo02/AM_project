@@ -19,7 +19,6 @@ Stage 1 is implemented in [camera_calibration.ipynb](camera_calibration.ipynb). 
 
 ```
 AM_project/
-├── calibration.py             # Minimal script (corner detection only)
 ├── camera_calibration.ipynb   # Full calibration notebook — stage 1
 ├── requirement.txt            # Python dependencies
 ├── data/                      # YOUR images go here (gitignored)
