@@ -9,10 +9,11 @@ From the Frangi ridge filter, we get the following non-smooth function:
 $$
 M(x, y) =
 \begin{cases}
-1  & \text{if} (x, y) \in \mathbb{S} \\  
-0  & \text{if} (x, y) \not\in \mathbb{S}
+1  & \text{if } (x, y) \in \mathbb{S} \\
+0  & \text{if } (x, y) \not\in \mathbb{S}
 \end{cases}
-$$Where $\mathbb{S}$ is the set of scratches for each patch. 
+$$
+Where $\mathbb{S}$ is the set of scratches for each patch. 
 The general objective, is not to learn the "normal glass" structure from pixels very close to the scratches, because scratch borders may contain weak anomalous signal. So what we can do is to dilate in order to make scratch regions thicker. 
 
  Therefore, the normal candidate is defined as:
@@ -34,11 +35,11 @@ where $K$ is the number of features extracted for each pixel. A possible definit
 $$  
 f(x, y) =  
 \begin{bmatrix}  
-I_{flat}(x, y) \  
-\sigma_{loc}(x, y) \  
-|\nabla I(x, y)| \  
-F_{Frangi}(x, y) \  
-\Delta I(x, y) \  
+I_{flat}(x, y) \\
+\sigma_{loc}(x, y) \\
+|\nabla I(x, y)| \\
+F_{Frangi}(x, y) \\
+\Delta I(x, y) \\
 T_{tophat}(x, y)  
 \end{bmatrix}  
 $$
@@ -84,7 +85,7 @@ Since the majority of pixels in every patch are assumed to be clean glass, we es
 
 $$  
 \mathcal{F}_{\mathcal{N}} =  
-{ f(x, y) : (x, y) \in \mathcal{N} }  
+\{ f(x, y) : (x, y) \in \mathcal{N} \}  
 $$
 
 and we model them as a multivariate Gaussian distribution:
@@ -117,8 +118,7 @@ $$
 However, in practice, the covariance matrix can be unstable, especially when some features are highly correlated. For this reason, a shrinkage version of the covariance matrix can be used:
 
 $$  
-\Sigma_{\lambda}
-
+\Sigma_{\lambda} =
 (1 - \lambda)\Sigma  
 +  
 \lambda \alpha I  
@@ -134,8 +134,7 @@ $$
 Therefore:
 
 $$  
-\Sigma_{\lambda}
-
+\Sigma_{\lambda} =
 (1 - \lambda)\Sigma  
 +  
 \lambda  
@@ -149,7 +148,6 @@ Once the normal-glass model has been estimated, each pixel is scored using the M
 
 $$  
 D(x, y) =
-
 \sqrt{  
 \left(f(x, y) - \mu\right)^T  
 \Sigma_{\lambda}^{-1}  
@@ -174,7 +172,7 @@ $$
 where $q_{95}$ is the 95th percentile and $q_{99.9}$ is the 99.9th percentile of the anomaly scores computed on the normal pixels:
 
 $$  
-{D(x, y) : (x, y) \in \mathcal{N}}  
+\{ D(x, y) : (x, y) \in \mathcal{N} \}  
 $$
 
 The lower threshold $\tau_{lo}$ is used to verify whether a pixel already detected by the Frangi mask is also anomalous according to the normal-glass model. The higher threshold $\tau_{hi}$ is used to detect only very strong anomalies that were not detected by the Frangi mask.
@@ -184,8 +182,7 @@ At this point, the original Frangi mask $M(x, y)$ and the anomaly score $D(x, y)
 The first class is the set of confirmed scratches:
 
 $$  
-C(x, y)
-
+C(x, y) =
 M(x, y)  
 \wedge  
 \left(D(x, y) \geq \tau_{lo}\right)  
@@ -196,8 +193,7 @@ These are pixels that were detected by the Frangi ridge filter and are also anom
 The second class is the set of candidate missed scratches:
 
 $$  
-A(x, y)
-
+A(x, y) =
 \left(D(x, y) \geq \tau_{hi}\right)  
 \wedge  
 \neg M(x, y)  
@@ -212,8 +208,7 @@ The purpose of this step is to keep only anomalies that have a scratch-like shap
 The third class is the set of suspect false positives:
 
 $$  
-F(x, y)
-
+F(x, y) =
 M(x, y)  
 \wedge  
 \left(D(x, y) < \tau_{lo}\right)  
@@ -224,8 +219,7 @@ These are pixels that were detected by the Frangi ridge filter but do not look a
 Finally, the fused scratch mask is obtained by combining the confirmed scratches with the cleaned candidate missed scratches:
 
 $$  
-M_{fused}(x, y)
-
+M_{fused}(x, y) =
 C(x, y)  
 \cup  
 A_{clean}(x, y)  
@@ -236,9 +230,8 @@ This fused mask has two advantages. First, it keeps the most reliable detections
 The final output of the system is therefore not only a binary segmentation mask, but a more informative decomposition:
 
 $$  
-\text{Output}
-
-{C, A_{clean}, F, M_{fused}}  
+\text{Output} =
+\{ C, A_{clean}, F, M_{fused} \}  
 $$
 
 where:
